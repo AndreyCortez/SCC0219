@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Programming Joke Generator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    
+    h1 {
+      color: #333;
+    }
+    
+    .container {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #f5f5f5;
+      border-radius: 5px;
+    }
+    
+    .joke {
+      margin-top: 20px;
+      font-style: italic;
+    }
+    
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+    
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Programming Joke Generator</h1>
+  <button id="getJokeButton">Get Joke</button>
+  <div class="container">
+    <div id="jokeContainer"></div>
+  </div>
+
+  <script>
+    document.getElementById('getJokeButton').addEventListener('click', getJoke);
+
+    function getJoke() {
+      var jokeContainer = document.getElementById('jokeContainer');
+      jokeContainer.innerHTML = 'Fetching joke...';
+
+      fetch('https://v2.jokeapi.dev/joke/Programming?blacklistFlags=nsfw,religious,political,racist,sexist,explicit&type=twopart')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch joke');
+          }
+          return response.json();
+        })
+        .then(data => {
+            console.log(data);
+          jokeContainer.innerHTML = '<p class="setup">' + data.setup + '</p>' +
+                                    '<p class="punchline">' + data.delivery + '</p>';
+        })
+        .catch(error => {
+            console.log(error);
+          jokeContainer.innerHTML = '';
+          var errorElement = document.createElement('p');
+          errorElement.classList.add('error');
+          errorElement.textContent = 'Failed to fetch joke. Please try again later.';
+          jokeContainer.appendChild(errorElement);
+        });
+    }
+  </script>
+</body>
+</html>
